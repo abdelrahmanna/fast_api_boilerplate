@@ -1,0 +1,51 @@
+"""
+Pydantic schemas for the {{ model_name }} entity.
+"""
+
+from sqlalchemy import Column, Integer, String
+from pydantic import BaseModel
+from typing import Optional
+from app.db.base import Base
+from app.db.mixins import TimestampMixin, CRUDMixin, SoftDeleteMixin
+
+class {{ model_name }}Base(BaseModel):
+    """
+    Shared attributes for all operations with {{ model_name }}.
+    """
+    # TODO: Define shared fields
+
+class {{ model_name }}Create({{ model_name }}Base):
+    """
+    Schema for creating a new {{ model_name }}.
+    """
+    pass
+
+class {{ model_name }}Update(BaseModel):
+    """
+    Schema for updating an existing {{ model_name }}.
+    """
+    # TODO: Define optional fields for updates
+    pass
+
+class {{ model_name }}Out({{ model_name }}Base):
+    """
+    Schema for reading a {{ model_name }} with ID.
+    """
+    id: int
+
+    class Config:
+        orm_mode = True
+
+
+"""
+SQLAlchemy model definition for the {{ model_name }} entity.
+"""
+
+
+class {{ model_name }}(Base, TimestampMixin, CRUDMixin, SoftDeleteMixin):
+    """
+    SQLAlchemy model for the {{ model_name }} table.
+    """
+    __tablename__ = "{{ lower_name }}s"
+    id = Column(Integer, primary_key=True, index=True)
+    # TODO: Define additional fields

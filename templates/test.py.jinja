@@ -1,0 +1,21 @@
+"""
+Tests for the {{ model_name }} API endpoints.
+"""
+
+import pytest
+from httpx import AsyncClient
+from app.main import app
+
+@pytest.mark.asyncio
+async def test_create_and_get_{{ lower_name }}():
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        # TODO: Adjust fields as needed
+        response = await ac.post("/{{ lower_name }}s/", json={
+            # Add fields here
+        })
+        assert response.status_code == 200
+        obj = response.json()
+        id = obj["id"]
+
+        response = await ac.get(f"/{{ lower_name }}s/{id}")
+        assert response.status_code == 200
