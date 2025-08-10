@@ -8,7 +8,7 @@ from typing import Optional
 from app.db.base import Base
 from app.db.mixins import TimestampMixin, CRUDMixin, SoftDeleteMixin
 
-class {{ model_name }}Base(BaseModel, TimestampMixin, CRUDMixin, SoftDeleteMixin):
+class {{ model_name }}Base(BaseModel):
     """
     Shared attributes for all operations with {{ model_name }}.
     """
@@ -42,7 +42,7 @@ SQLAlchemy model definition for the {{ model_name }} entity.
 """
 
 
-class {{ model_name }}(Base):
+class {{ model_name }}(Base, TimestampMixin, CRUDMixin, SoftDeleteMixin):
     """
     SQLAlchemy model for the {{ model_name }} table.
     """

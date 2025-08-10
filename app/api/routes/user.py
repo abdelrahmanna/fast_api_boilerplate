@@ -2,17 +2,15 @@
 FastAPI route definitions for the User entity.
 """
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, HTTPException
 from app.models.user import User, UserCreate, UserUpdate, UserOut
-from app.crud.user import create_user, get_user, update_user, delete_user
-from app.api.deps import get_db
+from app.api.deps import SessionDependency
 
 user_router = APIRouter()
 
 
 @user_router.post("/", response_model=UserOut)
-def create(item: UserCreate, db: Session = Depends(get_db)):
+def create(item: UserCreate, db: SessionDependency):
     """
     Create a new User.
     """
@@ -20,7 +18,7 @@ def create(item: UserCreate, db: Session = Depends(get_db)):
 
 
 @user_router.get("/{id}", response_model=UserOut)
-def read(id: int, db: Session = Depends(get_db)):
+def read(id: int, db: SessionDependency):
     """
     Retrieve a single User by ID.
     """
@@ -32,7 +30,7 @@ def read(id: int, db: Session = Depends(get_db)):
 
 
 @user_router.put("/{id}", response_model=UserOut)
-def update(id: int, item: UserUpdate, db: Session = Depends(get_db)):
+def update(id: int, item: UserUpdate, db: SessionDependency):
     """
     Update an existing User.
     """
@@ -43,11 +41,24 @@ def update(id: int, item: UserUpdate, db: Session = Depends(get_db)):
 
 
 @user_router.delete("/{id}")
-def delete(id: int, db: Session = Depends(get_db)):
+def delete(id: int, db: SessionDependency):
     """
     Delete a User by ID.
     """
-    db_obj = get_user(db, id)
+    db_obj = User.get(db, id)
     if not db_obj:
         raise HTTPException(status_code=404, detail="Not found")
-    return delete_user(db, db_obj)
+    return User.delete(db, db_obj)
+
+
+@user_router.put("/soft-delete/{id}", response_model=UserOut)
+def soft_delete(id: int, db: SessionDependency):
+    """
+    Soft delete a User by ID.
+    """
+    db_obj = User.get(db, id)
+
+    if not db_obj:
+        raise HTTPException(status_code=404, detail="Not found")
+
+    return User.soft_delete(db, db_obj)
